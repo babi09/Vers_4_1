@@ -17,7 +17,7 @@ from matplotlib.widgets import Slider, Button, RadioButtons
 
 # read input image data including kidney ground-truth masks
 # def readData4(patientName,subjectInfo,reconMethod,genBoundBox):
-def readData4(img, reconMethod, genBoundBox):
+def readData4(img, reconMethod, genBoundBox, targetOrgan):
     
     # seqNum=subjectInfo['numSeq'][patientName];
     seqNum = 1
@@ -69,39 +69,33 @@ def readData4(img, reconMethod, genBoundBox):
         
         #maskAddress= 'currentMask';
         #maskAddress='/fileserver/xxx/GraspRecons/reconResultsSCAN/'+patientName+'/';
-        maskAddress = 'leftCTMask_automatic.nii.gz'
+        
+        if targetOrgan == 'Liver':
+            maskAddressL = '.\\data\\1qfr4i2cwCoGRrC2RDIKRu_LabelLeft.nii'
+            maskAddressR = '.\\data\\1qfr4i2cwCoGRrC2RDIKRu_LabelRight.nii'
+            
+        if targetOrgan == 'Psoas':
+            maskAddressL = '1qfr4i2cwCoGRrC2RDIKRu_LabelLeft.nii'
+            maskAddressR = '1qfr4i2cwCoGRrC2RDIKRu_LabelRight.nii'
+ 
+        
         if seqNum==1:
             
             am = 1 
             
-            # if os.path.isfile(maskAddress+'_Label.nii'):
-            #     lkm1= nib.load(maskAddress+'_Label.nii');lkm=2*lkm1.get_data();
-            #     lkm[lkm>2]=2;
-            # else:
-            #     lkm=np.zeros(np.shape(im));
-            #
-            # if os.path.isfile(maskAddress+'_Label.nii'):
-            #     rkm1= nib.load(maskAddress+'_Label.nii');rkm=rkm1.get_data();
-            #     rkm[rkm>1]=1;
-            # else:
-            #     rkm=np.zeros(np.shape(im));
-            if os.path.isfile(maskAddress):
-                lkm1 = nib.load(maskAddress);
-                lkm = 2 * lkm1.get_data();
-                lkm[lkm > 2] = 2;
+            if os.path.isfile(maskAddressL):
+                lkm1= nib.load(maskAddress+'_Label.nii');lkm=2*lkm1.get_data();
+                lkm[lkm>2]=2;maskAddressL
             else:
-                lkm = np.zeros(np.shape(im));
-
-            if os.path.isfile(maskAddress):
-                rkm1 = nib.load(maskAddress);
-                rkm = rkm1.get_data();
-                rkm[rkm > 1] = 1;
+                lkm=np.zeros(np.shape(im));
+            
+            if os.path.isfile(maskAddressR):
+                rkm1= nib.load(maskAddressR);rkm=rkm1.get_data();
+                rkm[rkm>1]=1;
             else:
-                rkm = np.zeros(np.shape(im));
+                rkm=np.zeros(np.shape(im));
         else:
-            lkm=0;rkm=0;am=0;
-        
-             
+            lkm=0;rkm=0;am=0;         
     else:
         lkm=0;rkm=0;am=0;
 
@@ -165,61 +159,77 @@ def readVolume4(img):
 
     return im2
 
-def plotMask(fig, ax, img, mask, slice_i, view):
+def plotMask(fig, ax, img, mask, slice_i, view, organTarget):
     #img = nib.load(dataAddress)
     # img_vol = readVolume4(dataAddress)
 
-    Masks2SaveL = mask['L'];
-    Masks2Save1L = nib.Nifti1Image(Masks2SaveL, img.affine)
+#     Masks2SaveL = mask['L'];
+#     Masks2Save1L = nib.Nifti1Image(Masks2SaveL, img.affine)
 
-    lkm1 = Masks2Save1L
-    lkm = 2 * lkm1.get_data()
-    lkm[lkm > 2] = 2;
+#     lkm1 = Masks2Save1L
+#     lkm = 2 * lkm1.get_data()
+#     lkm[lkm > 2] = 2;
 
     if view == 'AX':
-        tm90 = lkm[:, :, slice_i]
+        
+        tm90 = mask[:, :, slice_i]
         tm90[tm90 >= 1] = 1
         masked = np.ma.masked_where(tm90 == 0, tm90)
         # colour map for ground-truth (red)
-        cmapm = matplotlib.colors.ListedColormap(["red", "red", "red"], name='from_list', N=None)
-         #selected_slice = img_vol[:, :, slice_i, 1]
-         #fig, ax = plt.subplots()
+        if organTarget == 'Liver'
+            cmapm = matplotlib.colors.ListedColormap(["red", "red", "red"], name='from_list', N=None)
+            #selected_slice = img_vol[:, :, slice_i, 1]
+            #fig, ax = plt.subplots()
             # ax.imshow(selected_slice, 'gray', interpolation='none')
-        ax.imshow(masked, cmap=cmapm, interpolation='none', alpha=0.3)
-        ax.contour(tm90, colors='red', linewidths=1.0)
+            ax.imshow(masked, cmap=cmapm, interpolation='none', alpha=0.3)
+            ax.contour(tm90, colors='red', linewidths=1.0)
+       
+        if organTarget == 'Psoas'
+            cmapm = matplotlib.colors.ListedColormap(["yellow", "ryellow", "yellow"], name='from_list', N=None)
+       
+            ax.imshow(masked, cmap=cmapm, interpolation='none', alpha=0.3)
+            ax.contour(tm90, colors='yellow', linewidths=1.0)
+   
+            
 
     if view == 'CR':
-        tm90 = lkm[slice_i, :, :]
+        tm90 = mask[slice_i, :, :]
         tm90[tm90 >= 1] = 1
         masked = np.ma.masked_where(tm90 == 0, tm90)
         # colour map for ground-truth (red)
-        cmapm = matplotlib.colors.ListedColormap(["red", "red", "red"], name='from_list', N=None)
-         #selected_slice = img_vol[:, :, slice_i, 1]
-         #fig, ax = plt.subplots()
-            # ax.imshow(selected_slice, 'gray', interpolation='none')
-        print('mask:')
-        print(masked.shape)
-        print('tm90:')
-        print(tm90.shape)
-        # tr = transforms.Affine2D().rotate_deg(90).translate(masked.shape[0], 0)
-        # ax.imshow(masked, transform=tr + ax.transData, cmap=cmapm, interpolation='none', alpha=0.3)
-        # ax.contour(tm90, transform=tr + ax.transData, colors='red', linewidths=1.0)
-        rotMasked = list(reversed(list(zip(*masked))))
-        ax.imshow(rotMasked, cmap=cmapm, interpolation='none', alpha=0.3)
-        rot_tm90 = list(reversed(list(zip(*tm90))))
-        ax.contour(rot_tm90, colors='red', linewidths=1.0)
-    #
+        
+        if organTarget == 'Liver'
+            cmapm = matplotlib.colors.ListedColormap(["red", "red", "red"], name='from_list', N=None)
+            rotMasked = list(reversed(list(zip(*masked))))
+            ax.imshow(rotMasked, cmap=cmapm, interpolation='none', alpha=0.3)
+            rot_tm90 = list(reversed(list(zip(*tm90))))
+            ax.contour(rot_tm90, colors='red', linewidths=1.0)
+            
+         if organTarget == 'Psoas'
+            cmapm = matplotlib.colors.ListedColormap(["yellow", "yellow", "yellow"], name='from_list', N=None)
+            rotMasked = list(reversed(list(zip(*masked))))
+            ax.imshow(rotMasked, cmap=cmapm, interpolation='none', alpha=0.3)
+            rot_tm90 = list(reversed(list(zip(*tm90))))
+            ax.contour(rot_tm90, colors='yellow', linewidths=1.0)
+    
     if view == 'SG':
-        tm90 = lkm[:, slice_i, :]
+        tm90 = mask[:, slice_i, :]
         tm90[tm90 >= 1] = 1
         masked = np.ma.masked_where(tm90 == 0, tm90)
         # colour map for ground-truth (red)
-        cmapm = matplotlib.colors.ListedColormap(["red", "red", "red"], name='from_list', N=None)
-
-        rotMasked = list(reversed(list(zip(*masked))))
-        ax.imshow(rotMasked, cmap=cmapm, interpolation='none', alpha=0.3)
-        rot_tm90 = list(reversed(list(zip(*tm90))))
-        ax.contour(rot_tm90, colors='red', linewidths=1.0)
+        if organTarget == 'Liver':
+            cmapm = matplotlib.colors.ListedColormap(["red", "red", "red"], name='from_list', N=None)
+            rotMasked = list(reversed(list(zip(*masked))))
+            ax.imshow(rotMasked, cmap=cmapm, interpolation='none', alpha=0.3)
+            rot_tm90 = list(reversed(list(zip(*tm90))))
+            ax.contour(rot_tm90, colors='red', linewidths=1.0)
+            
+         if organTarget == 'Psoas':
+            cmapm = matplotlib.colors.ListedColormap(["yellow", "yellow", "yellow"], name='from_list', N=None)
+            rotMasked = list(reversed(list(zip(*masked))))
+            ax.imshow(rotMasked, cmap=cmapm, interpolation='none', alpha=0.3)
+            rot_tm90 = list(reversed(list(zip(*tm90))))
+            ax.contour(rot_tm90, colors='yellow', linewidths=1.0)
 
     return fig, ax
 
