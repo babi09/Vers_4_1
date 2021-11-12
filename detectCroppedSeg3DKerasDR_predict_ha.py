@@ -130,8 +130,9 @@ def singlePatientDetection(pName, baseline, params, organTarget):
         model.load_weights('detect3D_30000.h5');
     # elif organTarget == 'Pancreas':
     #     #model for pancreas
-    # elif organTarget == 'Psoas':
-    #     #model for Psoas
+    elif organTarget == 'Psoas': 
+        model.load_weights('detect3D_32755_Psoas.h5');
+            
     # elif organTarget == 'Kidneys':
     #     #model for kidneys;
 
@@ -348,6 +349,9 @@ def singlePatientSegmentation(params, pName, maskDetect, boxDetect, kidneyNone, 
     # select organ to segment
     if organTarget == 'Liver':
         model.load_weights('croppedSeg3D_31735.h5');
+    elif organTarget == 'Psoas':
+        model.load_weights('croppedSeg3D_96000_Psoas.h5');
+    
 
     # perform prediction
     cropped_mask_test = model.predict(DataCroppedTest, verbose=1)
