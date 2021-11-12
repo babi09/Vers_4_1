@@ -117,19 +117,23 @@ if uploaded_nii_file is not None:
 # select organ to segment
 #     option = st.sidebar.selectbox('Select organ', ('Kidneys', 'Liver', 'Pancreas'))
 #     segmentation = st.sidebar.button('Perform Segmentation')
-    option = st.sidebar.radio('Select Organ to segment', ['None', 'Kidney', 'Liver', 'Pancreas', 'Psoas Muscles'], index=0)
+    option = st.sidebar.radio('Select Organ to segment', ['None', 'Kidney', 'Liver', 'Pancreas', 'Psoas'], index=0)
 
     if option == 'Liver':
         # load segmentation model
         # perform segmentation
-        maskSegment, plotmask = modelDeployment.runDeepSegmentationModel('Liver', img)
+        maskSegment, mask = modelDeployment.runDeepSegmentationModel('Liver', img)
         # plot segmentation mask
-        fig, ax = funcs_ha_use.plotMask(fig, ax, img, maskSegment, slice_i1, 'AX')
-        fig1, ax1 = funcs_ha_use.plotMask(fig1, ax1, img, maskSegment, slice_i2, 'CR')
-        fig2, ax2 = funcs_ha_use.plotMask(fig2, ax2, img, maskSegment, slice_i3, 'SG')
-
-
-    # plot the three view (axial, sagittal and coronal)
+        fig, ax = funcs_ha_use.plotMask(fig, ax, img, mask, slice_i1, 'AX')
+        fig1, ax1 = funcs_ha_use.plotMask(fig1, ax1, img, mask, slice_i2, 'CR')
+        fig2, ax2 = funcs_ha_use.plotMask(fig2, ax2, img, mask, slice_i3, 'SG')
+        
+     if option == 'Psoas':
+        maskSegment, mask = modelDeployment.runDeepSegmentationModel('Psoas', img)
+        # plot segmentation mask
+        fig, ax = funcs_ha_use.plotMask(fig, ax, img, mask, slice_i1, 'AX', 'Psoas')
+        fig1, ax1 = funcs_ha_use.plotMask(fig1, ax1, img, mask, slice_i2, 'CR', 'Psoas')
+        fig2, ax2 = funcs_ha_use.plotMask(fig2, ax2, img, mask, slice_i3, 'SG', 'Psoas')
 
 
 
@@ -139,7 +143,7 @@ if uploaded_nii_file is not None:
     plot = col3.pyplot(fig2)
     
     if st.sidebar.button('3D visualisation'):
-        verts, faces, normals, values = measure.marching_cubes_lewiner(plotmask, 0.0, allow_degenerate=False)
+        verts, faces, normals, values = measure.marching_cubes_lewiner(mask, 0.0, allow_degenerate=False)
         
         fig4 = go.Figure(data=[go.Mesh3d(x=verts[:,0], y=verts[:,1], z=verts[:,2], i=faces[:,0], j=faces[:,1], k=faces[:,2],
                                         opacity=0.6,
