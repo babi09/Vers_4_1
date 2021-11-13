@@ -17,9 +17,10 @@ from PIL import Image
 from nibabel import FileHolder, Nifti1Image
 from io import BytesIO
 from skimage import measure
-import plotly.graph_objects as go
-# streamlit interface
+import numpy as np
 
+# streamlit interface
+import plotly.graph_objects as go
 st.sidebar.title('Organ Detection and Segmentation')
 flag_Liver_Model = 0
 
@@ -127,7 +128,8 @@ if uploaded_nii_file is not None:
         fig, ax = funcs_ha_use.plotMask(fig, ax, img, mask, slice_i1, 'AX', 'Liver')
         fig1, ax1 = funcs_ha_use.plotMask(fig1, ax1, img, mask, slice_i2, 'CR', 'Liver')
         fig2, ax2 = funcs_ha_use.plotMask(fig2, ax2, img, mask, slice_i3, 'SG', 'Liver')
-        
+
+   
     if option == 'Psoas':
         # load segmentation model
         # perform segmentation
@@ -138,17 +140,82 @@ if uploaded_nii_file is not None:
         fig1, ax1 = funcs_ha_use.plotMask(fig1, ax1, img, mask, slice_i2, 'CR', 'Psoas')
         fig2, ax2 = funcs_ha_use.plotMask(fig2, ax2, img, mask, slice_i3, 'SG', 'Psoas')
 
+
+    # plot the three view (axial, sagittal and coronal)
+
+
+
 # plot volume
     plot = col1.pyplot(fig)
     plot = col2.pyplot(fig1)
     plot = col3.pyplot(fig2)
-    
+
     if st.sidebar.button('3D visualisation'):
+        print(np.min(mask[:]))
+        print(np.max(mask[:]))
         verts, faces, normals, values = measure.marching_cubes_lewiner(mask, 0.0, allow_degenerate=False)
-        
+
+        # pts = np.loadtxt(
+        #     np.DataSource().open('https://raw.githubusercontent.com/plotly/datasets/master/mesh_dataset.txt'))
+        # x, y, z = pts.T
+
+
         fig4 = go.Figure(data=[go.Mesh3d(x=verts[:,0], y=verts[:,1], z=verts[:,2], i=faces[:,0], j=faces[:,1], k=faces[:,2],
                                         opacity=0.6,
                                         autocolorscale=True)])
+
+
+
+        #verts, faces, normals, values = measure.marching_cubes_lewiner(mask, 0.0, allow_degenerate=False)
+        #fig4 = go.Figure(data=[go.Scatter3d(x=verts[:, 0], y=verts[:, 1], z=verts[:, 2], mode='markers')])
         col4.plotly_chart(fig4)
+
+        # df = pd.DataFrame({
+        #     'x': verts[:, 0],
+        #     'y': verts[:, 1],
+        #     'z': verts[:, 2],
+        #     'normalX': normals[:, 0],
+        #     'normalY': normals[:, 1],
+        #     'normalZ': normals[:, 2],
+        #     'colorR': np.abs(verts[:, 0]),
+        #     'colorG': np.abs(verts[:, 1]),
+        #     'colorB': np.abs(verts[:, 2]),
+        # })
+        #
+        # st.deck_gl_chart(
+        #     layers=[{
+        #         'id': 'pointCloud',
+        #         'radiusPixels': 1,
+        #         'type': 'PointCloudLayer',
+        #         'data': df,
+        #     }])
+
+        # cloud = pv.PolyData(verts).clean()
+        #
+        # surf = cloud.delaunay_3d(alpha=5)
+        # surf.plot()
+       #  shell = surf.extract_geometry().triangulate()
+       #  #decimated = shell.decimate(0.4).extract_surface().clean()
+       #  #decimated.compute_normals(cell_normals=True, point_normals=False, inplace=True)
+       #
+       #  #centers = decimated.cell_centers()
+       # # centers.translate(decimated['Normals'] * 10.0)
+       #
+       #  p = pv.Plotter(notebook=False)
+       #  p.add_mesh(shell, color="r")
+       #  p.link_views()
+       #  p.show()
+
+        # Make the xyz points
+        # theta = np.linspace(-10 * np.pi, 10 * np.pi, 100)
+        # z = np.linspace(-2, 2, 100)
+        # r = z ** 2 + 1
+        # x = r * np.sin(theta)
+        # y = r * np.cos(theta)
+        # points = np.column_stack((x, y, z))
+        #
+        # spline = pv.Spline(points, 500).tube(radius=0.1)
+        # spline.plot(scalars='arc_length', show_scalar_bar=False)
+
 
 
