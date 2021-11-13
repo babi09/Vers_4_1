@@ -127,8 +127,7 @@ if uploaded_nii_file is not None:
         fig, ax = funcs_ha_use.plotMask(fig, ax, img, mask, slice_i1, 'AX')
         fig1, ax1 = funcs_ha_use.plotMask(fig1, ax1, img, mask, slice_i2, 'CR')
         fig2, ax2 = funcs_ha_use.plotMask(fig2, ax2, img, mask, slice_i3, 'SG')
-        
-     if option == 'Psoas':
+    elif option == 'Psoas'
         maskSegment, mask = modelDeployment.runDeepSegmentationModel('Psoas', img)
         # plot segmentation mask
         fig, ax = funcs_ha_use.plotMask(fig, ax, img, mask, slice_i1, 'AX', 'Psoas')
