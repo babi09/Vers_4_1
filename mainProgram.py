@@ -124,18 +124,19 @@ if uploaded_nii_file is not None:
         # perform segmentation
         maskSegment, mask = modelDeployment.runDeepSegmentationModel('Liver', img)
         # plot segmentation mask
-        fig, ax = funcs_ha_use.plotMask(fig, ax, img, mask, slice_i1, 'AX')
-        fig1, ax1 = funcs_ha_use.plotMask(fig1, ax1, img, mask, slice_i2, 'CR')
-        fig2, ax2 = funcs_ha_use.plotMask(fig2, ax2, img, mask, slice_i3, 'SG')
+        fig, ax = funcs_ha_use.plotMask(fig, ax, img, mask, slice_i1, 'AX', 'Liver')
+        fig1, ax1 = funcs_ha_use.plotMask(fig1, ax1, img, mask, slice_i2, 'CR', 'Liver')
+        fig2, ax2 = funcs_ha_use.plotMask(fig2, ax2, img, mask, slice_i3, 'SG', 'Liver')
         
     if option == 'Psoas':
+        # load segmentation model
+        # perform segmentation
         maskSegment, mask = modelDeployment.runDeepSegmentationModel('Psoas', img)
+
         # plot segmentation mask
         fig, ax = funcs_ha_use.plotMask(fig, ax, img, mask, slice_i1, 'AX', 'Psoas')
         fig1, ax1 = funcs_ha_use.plotMask(fig1, ax1, img, mask, slice_i2, 'CR', 'Psoas')
         fig2, ax2 = funcs_ha_use.plotMask(fig2, ax2, img, mask, slice_i3, 'SG', 'Psoas')
-
-
 
 # plot volume
     plot = col1.pyplot(fig)
