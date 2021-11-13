@@ -1,5 +1,6 @@
 import detectCroppedSeg3DKerasDR_predict_ha
 import streamlit as st
+import funcs_ha_use
 
 @st.cache
 def runDeepSegmentationModel(organTarget, img):
