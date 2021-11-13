@@ -37,7 +37,7 @@ def singlePatientDetection(pName, baseline, params, organTarget):
     #visSlider = params['visSlider']; 
 
     ##### extract input image data (vol4D00)
-    vol4D00,_,_,_,_ = funcs_ha_use.readData4(pName,reconMethod,0);
+    vol4D00,_,_,_,_ = funcs_ha_use.readData4(pName,reconMethod,0, organTarget);
     zDimOri = vol4D00.shape[2];
     
     # xDim = vol4D00.shape[0];
