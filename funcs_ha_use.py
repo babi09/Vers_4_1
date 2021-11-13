@@ -176,7 +176,7 @@ def plotMask(fig, ax, img, mask, slice_i, view, organTarget):
         tm90[tm90 >= 1] = 1
         masked = np.ma.masked_where(tm90 == 0, tm90)
         # colour map for ground-truth (red)
-        if organTarget == 'Liver'
+        if organTarget == 'Liver':
             cmapm = matplotlib.colors.ListedColormap(["red", "red", "red"], name='from_list', N=None)
             #selected_slice = img_vol[:, :, slice_i, 1]
             #fig, ax = plt.subplots()
@@ -184,7 +184,7 @@ def plotMask(fig, ax, img, mask, slice_i, view, organTarget):
             ax.imshow(masked, cmap=cmapm, interpolation='none', alpha=0.3)
             ax.contour(tm90, colors='red', linewidths=1.0)
        
-        if organTarget == 'Psoas'
+        if organTarget == 'Psoas':
             cmapm = matplotlib.colors.ListedColormap(["yellow", "ryellow", "yellow"], name='from_list', N=None)
        
             ax.imshow(masked, cmap=cmapm, interpolation='none', alpha=0.3)
@@ -198,14 +198,14 @@ def plotMask(fig, ax, img, mask, slice_i, view, organTarget):
         masked = np.ma.masked_where(tm90 == 0, tm90)
         # colour map for ground-truth (red)
         
-        if organTarget == 'Liver'
+        if organTarget == 'Liver':
             cmapm = matplotlib.colors.ListedColormap(["red", "red", "red"], name='from_list', N=None)
             rotMasked = list(reversed(list(zip(*masked))))
             ax.imshow(rotMasked, cmap=cmapm, interpolation='none', alpha=0.3)
             rot_tm90 = list(reversed(list(zip(*tm90))))
             ax.contour(rot_tm90, colors='red', linewidths=1.0)
             
-         if organTarget == 'Psoas'
+         if organTarget == 'Psoas':
             cmapm = matplotlib.colors.ListedColormap(["yellow", "yellow", "yellow"], name='from_list', N=None)
             rotMasked = list(reversed(list(zip(*masked))))
             ax.imshow(rotMasked, cmap=cmapm, interpolation='none', alpha=0.3)
