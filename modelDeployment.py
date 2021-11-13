@@ -30,7 +30,7 @@ def runDeepSegmentationModel(organTarget, img):
 
         # call the model to detect and segment and return the mask
         maskDetect, boxDetect, kidneyNone, vol4D0, vol4Dpcs, zDimOri = detectCroppedSeg3DKerasDR_predict_ha.singlePatientDetection(img, int(baseline), params, 'Liver');
-        maskSegment, plotMask = detectCroppedSeg3DKerasDR_predict_ha.singlePatientSegmentation(params, img, maskDetect, boxDetect, kidneyNone, vol4D0, vol4Dpcs, DimOri, 'Liver');
+        maskSegment, plotMask = detectCroppedSeg3DKerasDR_predict_ha.singlePatientSegmentation(params, img, maskDetect, boxDetect, kidneyNone, vol4D0, vol4Dpcs, zDimOri, 'Liver');
 
     if organTarget == 'Psoas':
         reconMethod = 'SCAN';
@@ -45,7 +45,7 @@ def runDeepSegmentationModel(organTarget, img):
 
         # call the model to detect and segment and return the mask
         maskDetect, boxDetect, kidneyNone, vol4D0, vol4Dpcs, zDimOri = detectCroppedSeg3DKerasDR_predict_ha.singlePatientDetection(img, int(baseline), params, 'Psoas');
-        maskSegment, plotMask = detectCroppedSeg3DKerasDR_predict_ha.singlePatientSegmentation(params, img, maskDetect0, boxDetect0, kidneyNone0, vol4D0, vol4Dpcs, DimOri, 'Psoas');
+        maskSegment, plotMask = detectCroppedSeg3DKerasDR_predict_ha.singlePatientSegmentation(params, img, maskDetect0, boxDetect0, kidneyNone0, vol4D0, vol4Dpcs, zDimOri, 'Psoas');
 
         
         return maskSegment, plotMask
