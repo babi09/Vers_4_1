@@ -84,8 +84,8 @@ def readData4(img, reconMethod, genBoundBox, targetOrgan):
             am = 1 
             
             if os.path.isfile(maskAddressL):
-                lkm1= nib.load(maskAddress+'_Label.nii');lkm=2*lkm1.get_data();
-                lkm[lkm>2]=2;maskAddressL
+                lkm1= nib.load(maskAddressL);lkm=2*lkm1.get_data();
+                lkm[lkm>2]=2;
             else:
                 lkm=np.zeros(np.shape(im));
             
@@ -205,7 +205,7 @@ def plotMask(fig, ax, img, mask, slice_i, view, organTarget):
             rot_tm90 = list(reversed(list(zip(*tm90))))
             ax.contour(rot_tm90, colors='red', linewidths=1.0)
             
-         if organTarget == 'Psoas':
+        if organTarget == 'Psoas':
             cmapm = matplotlib.colors.ListedColormap(["yellow", "yellow", "yellow"], name='from_list', N=None)
             rotMasked = list(reversed(list(zip(*masked))))
             ax.imshow(rotMasked, cmap=cmapm, interpolation='none', alpha=0.3)
@@ -224,7 +224,7 @@ def plotMask(fig, ax, img, mask, slice_i, view, organTarget):
             rot_tm90 = list(reversed(list(zip(*tm90))))
             ax.contour(rot_tm90, colors='red', linewidths=1.0)
             
-         if organTarget == 'Psoas':
+        if organTarget == 'Psoas':
             cmapm = matplotlib.colors.ListedColormap(["yellow", "yellow", "yellow"], name='from_list', N=None)
             rotMasked = list(reversed(list(zip(*masked))))
             ax.imshow(rotMasked, cmap=cmapm, interpolation='none', alpha=0.3)
